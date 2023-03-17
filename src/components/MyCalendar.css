@@ -1,0 +1,10 @@
+.my-calendar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.my-calendar>div {
+    margin: 4px 8px;
+    width: 100%;
+}
