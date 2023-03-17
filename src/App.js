@@ -1,23 +1,32 @@
-import logo from './logo.svg';
+import React, { useState, useCallback } from 'react';
+import MyCalendar from './components/MyCalendar';
+import MyChat from './components/MyChat';
+
 import './App.css';
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="app">
+      <header className="app-header">
+        GPT4U
       </header>
+      <div className="main-container">
+        <div className="upper-container">
+          <div className="chat-container">
+            <MyChat />
+          </div>
+          <div className="calendar-container">
+            <MyCalendar />
+          </div>
+        </div>
+        <div className="bottom-container">
+          <div className="info-container">Info</div>
+          <div className="other-container">
+            Other Info
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
