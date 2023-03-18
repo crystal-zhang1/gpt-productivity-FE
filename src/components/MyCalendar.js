@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar';
 import dayjs from 'dayjs';
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import { getDefaultSchedule } from '../utils/scheduler-helper'
+import { getDefaultSchedule } from '../utils/scheduler-helper';
+import axios from 'axios';
+import config from '../configure';
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -14,17 +16,21 @@ const DnDCalendar = withDragAndDrop(Calendar);
 export default function MyCalendar() {
   const defaultDate = dayjs().toDate();
 
-  const defaultSchedule = getDefaultSchedule();
-  const myEventList = [
-    {
-      id: 0,
-      title: 'Half hour event very long title',
-      start: defaultSchedule.start,
-      end: defaultSchedule.end
-    }
-  ];
+  const [eventList, setEventList] = useState([]);
 
-  const [eventList, setEventList] = useState(myEventList);
+  useEffect(() => {
+    axios
+      .get(`${config.apiUrl}/events/active`)
+      .then((res) => {
+        if (res.data) {
+          const mappedEvents = mapAttributes(res.data);
+          setEventList(mappedEvents);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   return (
     <div className="my-calendar">
@@ -67,6 +73,15 @@ function updateEvent(data, eventList, setEventList) {
     ));
 }
 
-function handleSelectEvent (data) {
+function handleSelectEvent(data) {
   console.log(data);
+}
+
+function mapAttributes(events) {
+  if (!events) {
+    return;
+  }
+  return events.map((obj, index) => {
+    return { id: index, start: new Date(obj.start), end: new Date(obj.end), title: obj.title }
+  });
 }

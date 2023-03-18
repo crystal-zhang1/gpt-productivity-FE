@@ -27,7 +27,7 @@ export default function MyChat() {
         }
 
         axios
-            .post(`${config.apiUrl}/scheduler`, { sessionId })
+            .post(`${config.apiUrl}/events/new`, { sessionId })
             .then((res) => {
                 if (res.data) {
                     console.log(res.data);
