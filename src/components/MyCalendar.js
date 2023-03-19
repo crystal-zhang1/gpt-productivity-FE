@@ -23,7 +23,9 @@ export default function MyCalendar() {
       .get(`${config.apiUrl}/events/active`)
       .then((res) => {
         if (res.data) {
+          console.log("events: "+res.data);
           const mappedEvents = mapAttributes(res.data);
+          console.log("mappedEvents: "+mappedEvents);
           setEventList(mappedEvents);
         }
       })
