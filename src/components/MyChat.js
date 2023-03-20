@@ -13,7 +13,7 @@ export default function MyChat({ updateCalendar, updateEditor }) {
     const [prompt, setPrompt] = useState("");
     const [messages, setMessages] = useState([]);
     const [sessionId, setSessionId] = useState(0);
-    const [mode, setMode] = useState(3);
+    const [mode, setMode] = useState(2);
     const scheduleStart = new Date();
     const scheduleEnd = new Date().setDate(scheduleStart.getDate() + 7);
     const [timeRange, setTimeRange] = useState([scheduleStart, scheduleEnd]);
@@ -117,8 +117,8 @@ export default function MyChat({ updateCalendar, updateEditor }) {
                         )}
                     </select>
 
-                    <input className="chat-input"
-                        type="text"
+                    <textarea className="chat-input"
+                        //type="textarea"
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
                     />

@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import MyCalendar from './components/MyCalendar';
 import MyChat from './components/MyChat';
-// import EmailEditor from './components/EmailEditor';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import config from './configure';
@@ -23,58 +22,60 @@ function App() {
   }
 
   const updateEditor = (msg) => {
-    const emailInfo =  emailerParser(msg);
+    const emailInfo = emailerParser(msg);
     setSubject(emailInfo.subject);
     setContent(newLineParser(emailInfo.content));
   }
 
   const sendEmail = () => {
     axios
-    .post(`${config.apiUrl}/email/send`, { mailto, cc, subject, content })
-    .then((res) => {
+      .post(`${config.apiUrl}/email/send`, { mailto, cc, subject, content })
+      .then((res) => {
         if (res.data) {
-            console.log(res.data);
+          console.log(res.data);
         }
-    })
-    .catch((err) => {
+      })
+      .catch((err) => {
         console.error(err);
-    });
+      });
   }
 
 
   return (
     <div className="app">
+      
       <header className="app-header">
         GPT4U
       </header>
       <div className="main-container">
         <div className="upper-container">
           <div className="calendar-container">
+
             <MyCalendar key={seed} />
             <div>
               <label>Mailto: </label><input className="mailto-input"
-                        type="text"
-                        value={mailto}
-                        onChange={(e) => setMailto(e.target.value)}
-                    />
+                type="text"
+                value={mailto}
+                onChange={(e) => setMailto(e.target.value)}
+              />
             </div>
             <div>
               <label>CC: </label><input className="mailto-input"
-                        type="text"
-                        value={cc}
-                        onChange={(e) => setCc(e.target.value)}
-                    />
+                type="text"
+                value={cc}
+                onChange={(e) => setCc(e.target.value)}
+              />
             </div>
             <div>
               <label>Subject: </label><input className="subject-input"
-                        type="text"
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
-                    />
+                type="text"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
             </div>
-              <div>
+            <div>
               <button type="button" onClick={sendEmail}>Send</button>
-              </div>
+            </div>
             <ReactQuill theme="snow" value={content} onChange={setContent} />
           </div>
           <div className="chat-container">
@@ -108,13 +109,13 @@ function emailerParser(message) {
   const subjectMatch = subjuectRegex.exec(message);
 
   if (subjectMatch && subjectMatch[1]) {
-      results.subject = subjectMatch[1].trim();
+    results.subject = subjectMatch[1].trim();
   }
 
   const contentMatch = contentRegex.exec(message);
 
   if (contentMatch && contentMatch[1]) {
-      results.content = contentMatch[1].trim();
+    results.content = contentMatch[1].trim();
   }
 
   return results;
@@ -123,4 +124,8 @@ function emailerParser(message) {
 
 function newLineParser(message) {
   return message.replace(/(?:\r\n|\r|\n)/g, '<br>');
+}
+
+function handleNotification() {
+  console.log("handle notification");
 }

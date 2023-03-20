@@ -5,6 +5,8 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { getDefaultSchedule } from '../utils/scheduler-helper';
 import axios from 'axios';
 import config from '../configure';
+import { Store } from 'react-notifications-component';
+import Notification from './Notification';
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -23,9 +25,9 @@ export default function MyCalendar() {
       .get(`${config.apiUrl}/events/active`)
       .then((res) => {
         if (res.data) {
-          console.log("events: "+res.data);
+          console.log("events: " + res.data);
           const mappedEvents = mapAttributes(res.data);
-          console.log("mappedEvents: "+mappedEvents);
+          console.log("mappedEvents: " + mappedEvents);
           setEventList(mappedEvents);
         }
       })
@@ -34,8 +36,11 @@ export default function MyCalendar() {
       });
   }, []);
 
+  sendNotify(eventList);
+
   return (
     <div className="my-calendar">
+      <Notification title="my title" disabled="disabled" />
       <DnDCalendar
         defaultDate={defaultDate}
         defaultView="week"
@@ -77,6 +82,20 @@ function updateEvent(data, eventList, setEventList) {
 
 function handleSelectEvent(data) {
   console.log(data);
+  Store.addNotification({
+    title: "Wonderful!",
+    message: "teodosii@react-notifications-component",
+    type: "default",
+    insert: "top",
+    onClick: handleNotification,
+    container: "top-right",
+    animationIn: ["animate__animated", "animate__fadeIn"],
+    animationOut: ["animate__animated", "animate__fadeOut"],
+    dismiss: {
+      duration: 8000,
+      onScreen: true
+    }
+  });
 }
 
 function mapAttributes(events) {
@@ -86,4 +105,42 @@ function mapAttributes(events) {
   return events.map((obj, index) => {
     return { id: index, start: new Date(obj.start), end: new Date(obj.end), title: obj.title }
   });
+}
+
+function sendNotify(eventList) {
+  setInterval(() => {
+    eventList.forEach(event => {
+      const currTime = new Date();
+      if (compareTime(event.start, currTime)) {
+        showNotification();
+      }
+    })
+  }, 60000);
+}
+
+function compareTime(time1, time2) {
+  const roundedTime1 = time1.getTime() / 60000;
+  const roundedTime2 = time2.getTime() / 60000;
+  return roundedTime1 === roundedTime2;
+}
+
+function showNotification() {
+  Store.addNotification({
+    title: "Wonderful!",
+    message: "teodosii@react-notifications-component",
+    type: "success",
+    insert: "top",
+    container: "top-right",
+    animationIn: ["animate__animated", "animate__fadeIn"],
+    animationOut: ["animate__animated", "animate__fadeOut"],
+    dismiss: {
+      duration: 5000,
+      onScreen: true
+    }
+  });
+}
+
+
+function handleNotification() {
+  console.log("handle notification");
 }
