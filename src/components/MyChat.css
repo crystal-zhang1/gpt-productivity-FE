@@ -1,27 +1,98 @@
-.chat-msg {
-  border: 2px solid #dedede;
-  background-color: #f1f1f1;
-  border-radius: 5px;
+.msg-container {
+  overflow-y: auto;
+  height: 100%;
+  margin: 0 auto;
+  scroll-behavior: smooth;
+  /* scroll-margin-top: 9999px; */
   padding: 10px;
-  margin: 10px 0;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column-reverse;
+
+}
+
+.msg-container-outer {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  height: 700px;
+  width: 800px;
+  border: 1px solid #ccc;
+  /* border-radius: 10px; */
+  /* padding: 10px; */
+  background-color: #f4f4f4;
+  margin: 0 auto;
+}
+
+/* .msg-container-inner {
+   max-height:700px;
+} */
+
+.chat-msg {
+  position: relative;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  max-width: 80%;
+  word-wrap: break-word;
   white-space: pre-wrap;
+  font-size: 16px;
   text-align: left;
 }
 
-/* Darker chat container */
-.darker {
-  border-color: #ccc;
-  background-color: #ddd;
+.system {
+  display: none;
 }
 
-.chat-input {
-  width: 30em;
-  height: 50px;
-  padding: 12px 20px;
-  box-sizing: border-box;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  background-color: #f8f8f8;
-  font-size: 16px;
-  resize: none;
+.assistant .chat-msg {
+  background-color: #ffffff;
+  color: #555;
+  /* border: 1px solid #ccc; */
+  margin-left: 20px;
+  margin-right: auto;
+}
+
+.user .chat-msg {
+  background-color: #B0D2E8;
+  color: #333;
+  /* border: 1px solid #bbb; */
+  margin-left: auto;
+  margin-right: 40px;
+}
+
+.assistant .chat-msg:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  border-style: solid;
+  border-width: 10px 20px 10px 0;
+  border-color: transparent #ffffff transparent transparent;
+  transform: translateY(-50%);
+}
+
+.user .chat-msg:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  border-style: solid;
+  border-width: 10px 0 10px 20px;
+  border-color: transparent transparent transparent #B0D2E8;
+  transform: translateY(-50%);
+}
+
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+.tentative-container {
+  display: flex;
+  justify-content: center;
 }

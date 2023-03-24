@@ -5,7 +5,6 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { getDefaultSchedule } from '../utils/scheduler-helper';
 import axios from 'axios';
 import config from '../configure';
-import { Store } from 'react-notifications-component';
 import Notification from './Notification';
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
@@ -52,9 +51,11 @@ export default function MyCalendar() {
         // console.log("setInterval(event): ", event);
         // console.log(currTime);
         if (compareTime(event.start, currTime)) {
-          // todo: add content
           setCurrEvent(event);
           setNotify(true);
+          setTimeout(() => {
+            setNotify(false);
+          }, 10000);
           // showNotification();
         }
       })
@@ -77,13 +78,9 @@ export default function MyCalendar() {
     }
   }
 
-
-
-
-
   return (
     <div className="my-calendar">
-      <Notification title="my title" active={notify} />
+      <Notification title={currEvent ? currEvent.title: ""} active={notify} />
       <DnDCalendar
         defaultDate={defaultDate}
         defaultView="week"
@@ -135,7 +132,6 @@ function mapAttributes(events) {
 //       console.log(event);
 //       console.log(currTime);
 //       if (compareTime(event.start, currTime)) {
-//         // todo: add content
 //         setCurrEvent(event);
 //         setNotify(true);
 //         // showNotification();
@@ -169,9 +165,3 @@ function compareTime(time1, time2) {
 //     }
 //   });
 // }
-
-
-function handleNotification() {
-  // todo: call chatgpt
-  console.log("handle notification");
-}

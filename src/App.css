@@ -1,5 +1,7 @@
 .app {
   text-align: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-header {
@@ -22,12 +24,29 @@
 .bottom-container {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
   width: 100%;
 }
 
-.chat-container,
+.chat-container {
+  display: flex;
+  flex:1;
+  flex-direction: column;
+  justify-content:end;
+  padding: 20px 20px;
+  
+}
 .calendar-container {
   display: flex;
   flex:1;
   flex-direction: column;
+}
+
+.email-container {
+  display: flex;
+  flex-direction:column;
+}
+
+.hide-container {
+  display: none;
 }

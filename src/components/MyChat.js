@@ -4,8 +4,6 @@ import './MyChat.css';
 import config from '../configure';
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import TentativeEvents from './TentativeEvents.js';
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css'
 
 const modes = [{ modeId: 1, modeName: "Small talk" },
 { modeId: 2, modeName: "Scheduler" },
@@ -20,6 +18,7 @@ export default function MyChat({ updateCalendar, updateEditor }) {
     const scheduleEnd = new Date(new Date().setDate(scheduleStart.getDate() + 7));
     const [timeRange, setTimeRange] = useState([scheduleStart, scheduleEnd]);
     const [tentative, setTentative] = useState([]);
+    const [showPicker, setShowPicker] = useState(false);
 
     const handleModeChange = (event) => {
         event.preventDefault();
@@ -29,32 +28,38 @@ export default function MyChat({ updateCalendar, updateEditor }) {
             // Cleanup
             setSessionId(0);
             setPrompt("");
-            console.log("modeval: ", modeVal);
-            console.log(modeVal === 2);
+            setMessages([]);
             if (modeVal === 2) {
-                console.log("timeRange:", timeRange);
-                axios
-                    .post(`${config.apiUrl}/chat`, { mode: modeVal, sessionId: 0, prompt: "", timeRange })
-                    .then((res) => {
-                        if (res.data) {
-                            setMessages(res.data);
-
-                            setSessionId(res.data[0].sessionId);
-
-                            const lastMsg = res.data[res.data.length - 1].content;
-
-                            const content = parseSchedule(lastMsg);
-
-                            const scheduleObj = parseCsv(content);
-                            const convertedObj = convertToEvents(scheduleObj, "tentative");
-
-                            setTentative(convertedObj);
-                        }
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                    });
+                setShowPicker(true);
+            } else {
+                setShowPicker(false);
             }
+            // console.log("modeval: ", modeVal);
+            // console.log(modeVal === 2);
+            // if (modeVal === 2) {
+            //     console.log("timeRange:", timeRange);
+            //     axios
+            //         .post(`${config.apiUrl}/chat`, { mode: modeVal, sessionId: 0, prompt: "", timeRange })
+            //         .then((res) => {
+            //             if (res.data) {
+            //                 setMessages(res.data);
+
+            //                 setSessionId(res.data[0].sessionId);
+
+            //                 const lastMsg = res.data[res.data.length - 1].content;
+
+            //                 const content = parseSchedule(lastMsg);
+
+            //                 const scheduleObj = parseCsv(content);
+            //                 const convertedObj = convertToEvents(scheduleObj, "tentative");
+
+            //                 setTentative(convertedObj);
+            //             }
+            //         })
+            //         .catch((err) => {
+            //             console.error(err);
+            //         });
+            // }
         }
     }
 
@@ -101,7 +106,6 @@ export default function MyChat({ updateCalendar, updateEditor }) {
             return;
         };
 
-        console.log("anything");
 
         // const newMsg = [...messages, { type: "user", content: prompt }];
         // setMessages(newMsg);
@@ -121,6 +125,7 @@ export default function MyChat({ updateCalendar, updateEditor }) {
                     const convertedObj = convertToEvents(scheduleObj, "tentative");
 
                     setTentative(convertedObj);
+                    setPrompt("");
                 }
             })
             .catch((err) => {
@@ -131,20 +136,23 @@ export default function MyChat({ updateCalendar, updateEditor }) {
 
     return (
         <div className="my-chat">
+            <div className='msg-container-outer'>
+                <div className="msg-container">
+                    {messages && messages.slice().reverse().map(({ role, content, orderNum }) =>
+                        <div className={role}>
+                            <span className="chat-role">{role}</span>
+                            <div className="chat-msg" key={orderNum + 1}>
+                                <span>{content}</span>
+                            </div>
 
-            <div className="msg-container">
-                {messages && messages.map(({ role, content, orderNum }) =>
-                    <div className="chat-msg darker" key={orderNum + 1}>
-                        <span>{role}: </span>
-                        <span>{content}</span>
-                    </div>
-                )}
+                        </div>
+                    )}
+                </div>
             </div>
-
             <div className="input-container">
 
                 <form onSubmit={(event) => handleSubmit(event)}>
-                    <div>
+                    <div className={showPicker ? "show" : "hide"}>
                         <DateTimeRangePicker onChange={setTimeRange} value={timeRange} />
                     </div>
                     <select value={mode} onChange={handleModeChange}>
@@ -186,7 +194,11 @@ export default function MyChat({ updateCalendar, updateEditor }) {
                 <button type="button" onClick={addToEditor}>Add to editor</button>
             </div>
 
+
+
         </div>
+
+
     );
 }
 
@@ -250,3 +262,6 @@ function emailerParser(message) {
 
 }
 
+function getChatMsgClassname(role){
+    return `chat-msg ${role}`;
+}

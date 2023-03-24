@@ -17,6 +17,8 @@ function App() {
   const [mailto, setMailto] = useState("");
   const [cc, setCc] = useState("");
 
+  const [display, setDisplay] = useState(false);
+
   const updateCalendar = () => {
     setSeed(Math.random());
   }
@@ -38,12 +40,13 @@ function App() {
       .catch((err) => {
         console.error(err);
       });
+    clearEmailInputs(setMailto, setCc, setSubject, setContent);
   }
 
 
   return (
     <div className="app">
-      
+
       <header className="app-header">
         GPT4U
       </header>
@@ -52,6 +55,8 @@ function App() {
           <div className="calendar-container">
 
             <MyCalendar key={seed} />
+          </div>
+          <div className={display ? "mail-container" : "hide-container"}>
             <div>
               <label>Mailto: </label><input className="mailto-input"
                 type="text"
@@ -78,6 +83,8 @@ function App() {
             </div>
             <ReactQuill theme="snow" value={content} onChange={setContent} />
           </div>
+
+
           <div className="chat-container">
             <MyChat updateCalendar={updateCalendar} updateEditor={updateEditor} />
           </div>
@@ -128,4 +135,11 @@ function newLineParser(message) {
 
 function handleNotification() {
   console.log("handle notification");
+}
+
+function clearEmailInputs(setMailto, setCc, setSubject, setContent) {
+  setMailto("");
+  setCc("");
+  setSubject("")
+  setContent("");
 }
