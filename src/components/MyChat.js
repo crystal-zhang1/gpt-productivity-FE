@@ -9,7 +9,7 @@ const modes = [{ modeId: 1, modeName: "Small talk" },
 { modeId: 2, modeName: "Scheduler" },
 { modeId: 3, modeName: "Email Asistant" }];
 
-export default function MyChat({ updateCalendar, updateEditor }) {
+export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
     const [prompt, setPrompt] = useState("");
     const [messages, setMessages] = useState([]);
     const [sessionId, setSessionId] = useState(0);
@@ -18,7 +18,9 @@ export default function MyChat({ updateCalendar, updateEditor }) {
     const scheduleEnd = new Date(new Date().setDate(scheduleStart.getDate() + 7));
     const [timeRange, setTimeRange] = useState([scheduleStart, scheduleEnd]);
     const [tentative, setTentative] = useState([]);
-    const [showPicker, setShowPicker] = useState(false);
+    const [calendarParts, setcalendarParts] = useState(false);
+    const [emailParts, setEmailParts] = useState(false);
+
 
     const handleModeChange = (event) => {
         event.preventDefault();
@@ -29,10 +31,16 @@ export default function MyChat({ updateCalendar, updateEditor }) {
             setSessionId(0);
             setPrompt("");
             setMessages([]);
+            onModeChange(modeVal);
             if (modeVal === 2) {
-                setShowPicker(true);
+                setcalendarParts(true);
+                setEmailParts(false);
+            } else if (modeVal == 3) {
+                setcalendarParts(false);
+                setEmailParts(true);
             } else {
-                setShowPicker(false);
+                setcalendarParts(false);
+                setEmailParts(false);
             }
             // console.log("modeval: ", modeVal);
             // console.log(modeVal === 2);
@@ -152,24 +160,31 @@ export default function MyChat({ updateCalendar, updateEditor }) {
             <div className="input-container">
 
                 <form onSubmit={(event) => handleSubmit(event)}>
-                    <div className={showPicker ? "show" : "hide"}>
+                    <div className={calendarParts ? "show-range-picker" : "hide"}>
                         <DateTimeRangePicker onChange={setTimeRange} value={timeRange} />
                     </div>
-                    <select value={mode} onChange={handleModeChange}>
-                        {modes && modes.map(({ modeId, modeName }) =>
-                            <option value={modeId} key={modeId}>{modeName}</option>
-                        )}
-                    </select>
 
-                    <textarea className="chat-input"
-                        //type="textarea"
-                        value={prompt}
-                        onChange={(e) => setPrompt(e.target.value)}
-                    />
-                    <button type="submit">Submit</button>
+                    <div className='input-section'>
+                        <select className='mode-selector' value={mode} onChange={handleModeChange}>
+                            {modes && modes.map(({ modeId, modeName }) =>
+                                <option value={modeId} key={modeId}>{modeName}</option>
+                            )}
+                        </select>
+
+                        <textarea className="chat-input"
+                            //type="textarea"
+                            value={prompt}
+                            onChange={(e) => setPrompt(e.target.value)}
+                        />
+                        <button type="submit" className='add-to-btn'>Submit</button>
+                    </div>
                 </form>
 
-                <div className="tentative-container">
+
+                <button type="button" className={calendarParts ? 'add-to-btn' : 'hide'} onClick={addToCalendar}>Add to calendar</button>
+                <button type="button" className={emailParts ? 'add-to-btn' : 'hide'} onClick={addToEditor}>Add to editor</button>
+
+                <div className={calendarParts ? "tentative-container" : "hide"}>
                     <table>
                         <thead>
                             <tr key="tentative-container-title">
@@ -189,9 +204,6 @@ export default function MyChat({ updateCalendar, updateEditor }) {
                         </tbody>
                     </table>
                 </div>
-
-                <button type="button" onClick={addToCalendar}>Add to calendar</button>
-                <button type="button" onClick={addToEditor}>Add to editor</button>
             </div>
 
 
@@ -262,6 +274,6 @@ function emailerParser(message) {
 
 }
 
-function getChatMsgClassname(role){
+function getChatMsgClassname(role) {
     return `chat-msg ${role}`;
 }

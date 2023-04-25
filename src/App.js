@@ -17,7 +17,10 @@ function App() {
   const [mailto, setMailto] = useState("");
   const [cc, setCc] = useState("");
 
-  const [display, setDisplay] = useState(false);
+
+
+  const [emailDisplay, setEmailDisplay] = useState(false);
+  const [calendarDisplay, setCalendarDisplay] = useState(true);
 
   const updateCalendar = () => {
     setSeed(Math.random());
@@ -43,6 +46,15 @@ function App() {
     clearEmailInputs(setMailto, setCc, setSubject, setContent);
   }
 
+  function handleModeChange(mode) {
+    if (mode === 3) {
+      setEmailDisplay(true);
+      setCalendarDisplay(false);
+    } else {
+      setEmailDisplay(false);
+      setCalendarDisplay(true);
+    }
+  }
 
   return (
     <div className="app">
@@ -52,31 +64,33 @@ function App() {
       </header>
       <div className="main-container">
         <div className="upper-container">
-          <div className="calendar-container">
+          <div className={calendarDisplay ? "calendar-container" : "hide-container"}>
 
             <MyCalendar key={seed} />
           </div>
-          <div className={display ? "mail-container" : "hide-container"}>
-            <div>
-              <label>Mailto: </label><input className="mailto-input"
-                type="text"
-                value={mailto}
-                onChange={(e) => setMailto(e.target.value)}
-              />
-            </div>
-            <div>
-              <label>CC: </label><input className="mailto-input"
-                type="text"
-                value={cc}
-                onChange={(e) => setCc(e.target.value)}
-              />
-            </div>
-            <div>
-              <label>Subject: </label><input className="subject-input"
-                type="text"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-              />
+          <div className={emailDisplay ? "mail-container" : "hide-container"}>
+            <div className='mailto'>
+              <div>
+                <label className='mailto-label'>Mailto: </label><input className="mailto-input"
+                  type="text"
+                  value={mailto}
+                  onChange={(e) => setMailto(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className='mailto-label'>CC: </label><input className="mailto-input"
+                  type="text"
+                  value={cc}
+                  onChange={(e) => setCc(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className='mailto-label'>Subject: </label><input className="mailto-input"
+                  type="text"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                />
+              </div>
             </div>
             <div>
               <button type="button" onClick={sendEmail}>Send</button>
@@ -86,7 +100,8 @@ function App() {
 
 
           <div className="chat-container">
-            <MyChat updateCalendar={updateCalendar} updateEditor={updateEditor} />
+            <h1>Chatbot</h1>
+            <MyChat updateCalendar={updateCalendar} updateEditor={updateEditor} onModeChange={handleModeChange} />
           </div>
         </div>
 

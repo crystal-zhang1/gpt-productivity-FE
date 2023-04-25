@@ -4,6 +4,11 @@
   flex-direction: column;
 }
 
+h1 {
+  font-weight: 400;
+  font-size: 40px;
+}
+
 .app-header {
   background-color: #282c34;
   display: flex;
@@ -32,7 +37,7 @@
   display: flex;
   flex:1;
   flex-direction: column;
-  justify-content:end;
+  justify-content:start;
   padding: 20px 20px;
   
 }
@@ -40,13 +45,38 @@
   display: flex;
   flex:1;
   flex-direction: column;
-}
-
-.email-container {
-  display: flex;
-  flex-direction:column;
+  margin-top: 75px;
+  margin-left: 30px;
 }
 
 .hide-container {
   display: none;
+}
+
+.mail-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 840px;
+  min-height: 900px;
+  margin-left: 50px;
+  margin-top: 30px;
+
+}
+
+.mailto {
+  /* display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%; */
+  text-align: left;
+  margin-left: 20px;
+}
+
+.mailto-label {
+  font-size: 18px
+}
+
+.mailto-input {
+  padding: 5px;
+  margin: 5px;
 }
