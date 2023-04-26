@@ -3,7 +3,6 @@ import axios from "axios";
 import './MyChat.css';
 import config from '../configure';
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
-import TentativeEvents from './TentativeEvents.js';
 
 const modes = [{ modeId: 1, modeName: "Small talk" },
 { modeId: 2, modeName: "Scheduler" },
@@ -27,7 +26,6 @@ export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
         if (window.confirm("Confirm mode change?")) {
             const modeVal = parseInt(event.target.value);
             setMode(modeVal);
-            // Cleanup
             setSessionId(0);
             setPrompt("");
             setMessages([]);
@@ -42,32 +40,6 @@ export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
                 setcalendarParts(false);
                 setEmailParts(false);
             }
-            // console.log("modeval: ", modeVal);
-            // console.log(modeVal === 2);
-            // if (modeVal === 2) {
-            //     console.log("timeRange:", timeRange);
-            //     axios
-            //         .post(`${config.apiUrl}/chat`, { mode: modeVal, sessionId: 0, prompt: "", timeRange })
-            //         .then((res) => {
-            //             if (res.data) {
-            //                 setMessages(res.data);
-
-            //                 setSessionId(res.data[0].sessionId);
-
-            //                 const lastMsg = res.data[res.data.length - 1].content;
-
-            //                 const content = parseSchedule(lastMsg);
-
-            //                 const scheduleObj = parseCsv(content);
-            //                 const convertedObj = convertToEvents(scheduleObj, "tentative");
-
-            //                 setTentative(convertedObj);
-            //             }
-            //         })
-            //         .catch((err) => {
-            //             console.error(err);
-            //         });
-            // }
         }
     }
 
@@ -106,7 +78,6 @@ export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
 
     };
 
-
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!prompt) {
@@ -114,9 +85,6 @@ export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
             return;
         };
 
-
-        // const newMsg = [...messages, { type: "user", content: prompt }];
-        // setMessages(newMsg);
         axios
             .post(`${config.apiUrl}/chat`, { mode, sessionId, prompt, timeRange })
             .then((res) => {
@@ -172,7 +140,6 @@ export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
                         </select>
 
                         <textarea className="chat-input"
-                            //type="textarea"
                             value={prompt}
                             onChange={(e) => setPrompt(e.target.value)}
                         />
@@ -205,12 +172,7 @@ export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
                     </table>
                 </div>
             </div>
-
-
-
         </div>
-
-
     );
 }
 
@@ -233,8 +195,7 @@ export function parseCsv(csv) {
 export function parseSchedule(content) {
 
     const regex = /\n[\s\S]*Start of schedule\n([\s\S]*)\n[\s\S]*End of schedule/i;
-    // const regex = /[\s\S]*(start of schedule)\\n/;
-    //const regex = /\n[\s\S]*(start of schedule)\n/;
+
     const match = regex.exec(content);
 
     if (match && match[1]) {
@@ -248,32 +209,4 @@ export function convertToEvents(events, status) {
     return events.map(obj => {
         return { start: new Date(obj.start), end: new Date(obj.end), title: obj.title, status: status }
     });
-}
-
-
-
-function emailerParser(message) {
-    const results = { subject: "", content: "" };
-
-    const subjuectRegex = /Subject:([\s\S]*)\n/i;
-    const contentRegex = /\nContent:([\s\S]*)/i;
-
-    const subjectMatch = subjuectRegex.exec(message);
-
-    if (subjectMatch && subjectMatch[1]) {
-        results.subject = subjectMatch[1].trim();
-    }
-
-    const contentMatch = contentRegex.exec(message);
-
-    if (contentMatch && contentMatch[1]) {
-        results.content = contentMatch[1].trim();
-    }
-
-    return results;
-
-}
-
-function getChatMsgClassname(role) {
-    return `chat-msg ${role}`;
 }

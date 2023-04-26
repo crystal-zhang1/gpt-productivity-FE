@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Calendar, dayjsLocalizer } from 'react-big-calendar';
 import dayjs from 'dayjs';
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import { getDefaultSchedule } from '../utils/scheduler-helper';
 import axios from 'axios';
 import config from '../configure';
 import Notification from './Notification';
@@ -86,7 +85,7 @@ export default function MyCalendar() {
         defaultView="week"
         localizer={localizer}
         events={eventList}
-        onSelectEvent={(data) => { console.log("select"); handleSelectEvent(data); }}
+        onSelectEvent={(data) => { console.log("select"); handleSelectEvent(data); }} // TODO: event selection feature
         onSelectSlot={(data) => { console.log("Slot"); createNewEvent(data); }}
         onEventDrop={(data) => { console.log("Drop"); updateEvent(data, eventList, setEventList); }}
         onEventResize={(data) => { console.log("Resize"); updateEvent(data, eventList, setEventList); }}
@@ -112,6 +111,7 @@ async function updateEvent(data, eventList, setEventList) {
     ));
 }
 
+// TODO: incomplete event selection fn
 function handleSelectEvent(data, eventList, setNotify) {
 
 }
@@ -125,20 +125,6 @@ function mapAttributes(events) {
   });
 }
 
-// function sendNotify(eventList, setCurrEvent, setNotify) {
-//   setInterval(() => {
-//     eventList && eventList.forEach(event => {
-//       const currTime = new Date();
-//       console.log(event);
-//       console.log(currTime);
-//       if (compareTime(event.start, currTime)) {
-//         setCurrEvent(event);
-//         setNotify(true);
-//         // showNotification();
-//       }
-//     })
-//   }, 60000);
-// }
 
 function compareTime(time1, time2) {
   console.log("time1", time1);
@@ -149,19 +135,3 @@ function compareTime(time1, time2) {
   console.log("time2", roundedTime2);
   return roundedTime1 === roundedTime2;
 }
-
-// function showNotification() {
-//   Store.addNotification({
-//     title: "Wonderful!",
-//     message: "teodosii@react-notifications-component",
-//     type: "success",
-//     insert: "top",
-//     container: "top-right",
-//     animationIn: ["animate__animated", "animate__fadeIn"],
-//     animationOut: ["animate__animated", "animate__fadeOut"],
-//     dismiss: {
-//       duration: 5000,
-//       onScreen: true
-//     }
-//   });
-// }

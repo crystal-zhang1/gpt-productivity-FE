@@ -8,5 +8,3 @@ export function getDefaultSchedule() {
         end: new Date(nextMinute + 30 * 60 * 1000)
     }
 }
-
-

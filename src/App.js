@@ -6,7 +6,6 @@ import 'react-quill/dist/quill.snow.css';
 import config from './configure';
 import axios from 'axios';
 
-
 import './App.css';
 
 function App() {

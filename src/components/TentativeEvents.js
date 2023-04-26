@@ -1,8 +1,6 @@
 import React from "react";
 
-
 export default function TentativeEvents({ tentative }) {
-
 
     return (
 
@@ -18,14 +16,11 @@ export default function TentativeEvents({ tentative }) {
                 <tbody>
                     {tentative && tentative.length > 0 && tentative.map(({ id, start, end, title }) =>
                         <tr className="chat-msg darker" key={id}>
-                            {/* <td>{start}</td>
-                            <td>{end}</td> */}
                             <td>{title}</td>
                         </tr>
                     )}
                 </tbody>
             </table>
         </div>
-
     )
 }
