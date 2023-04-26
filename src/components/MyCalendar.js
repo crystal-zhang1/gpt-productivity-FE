@@ -14,6 +14,7 @@ const localizer = dayjsLocalizer(dayjs);
 const DnDCalendar = withDragAndDrop(Calendar);
 let intervalStarted = false;
 
+
 export default function MyCalendar() {
   const defaultDate = dayjs().toDate();
 
@@ -24,7 +25,7 @@ export default function MyCalendar() {
   const latestEventList = useRef(eventList);
   latestEventList.current = eventList;
 
-
+  // Fetch active events from server
   useEffect(() => {
     axios
       .get(`${config.apiUrl}/events/active`)
@@ -42,7 +43,7 @@ export default function MyCalendar() {
   }, []);
 
 
-
+  // Set up interval that checks for events that are currently active and displays notifs
   useEffect(() => {
     const intervalId = setInterval(() => {
       latestEventList.current && latestEventList.current.forEach(event => {
@@ -64,7 +65,7 @@ export default function MyCalendar() {
     return () => clearInterval(intervalId);
   }, [eventList]);
 
-
+  // Creates new event when user selects time slot on calendar
   const createNewEvent = (data) => {
     // console.log(notify);
     // // sendNotify(eventList, setCurrEvent, setNotify);
@@ -73,13 +74,12 @@ export default function MyCalendar() {
     const title = window.prompt('New Event name')
     if (title) {
       setEventList((prev) => [...prev, { start, end, title }]);
-
     }
   }
 
   return (
     <div className="my-calendar">
-      <Notification title={currEvent ? currEvent.title: ""} active={notify} />
+      <Notification title={currEvent ? currEvent.title : ""} active={notify} />
       <DnDCalendar
         defaultDate={defaultDate}
         defaultView="week"

@@ -21,6 +21,7 @@ export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
     const [emailParts, setEmailParts] = useState(false);
 
 
+    // handle mode changes
     const handleModeChange = (event) => {
         event.preventDefault();
         if (window.confirm("Confirm mode change?")) {
@@ -43,6 +44,7 @@ export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
         }
     }
 
+    // Add tentative events to calendar
     const addToCalendar = (event) => {
         event.preventDefault();
 
@@ -65,6 +67,7 @@ export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
 
     };
 
+    // Adds last message to email editor
     const addToEditor = (event) => {
         event.preventDefault();
 
@@ -78,6 +81,7 @@ export default function MyChat({ updateCalendar, updateEditor, onModeChange }) {
 
     };
 
+    // Handle form submission
     const handleSubmit = (event) => {
         event.preventDefault();
         if (!prompt) {
@@ -192,6 +196,7 @@ export function parseCsv(csv) {
     });
 }
 
+// Parses schedule string given by gpt response
 export function parseSchedule(content) {
 
     const regex = /\n[\s\S]*Start of schedule\n([\s\S]*)\n[\s\S]*End of schedule/i;
